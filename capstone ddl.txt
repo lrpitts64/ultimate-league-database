@@ -1,0 +1,196 @@
+
+CREATE TABLE [Dues]
+( 
+	[Player_ID]          integer  NOT NULL ,
+	[due_id]             integer  NOT NULL ,
+	[payment_amount]     money  NULL ,
+	[payment_date]       date  NULL ,
+	[promo_code]         bit  NULL 
+)
+go
+
+ALTER TABLE [Dues]
+	ADD CONSTRAINT [XPKDues] PRIMARY KEY  CLUSTERED ([due_id] ASC)
+go
+
+CREATE TABLE [Logon]
+( 
+	[Logon_ID]           integer  NOT NULL ,
+	[User_Name]          varchar(20)  NULL ,
+	[Pass_Word]          varchar(10)  NULL ,
+	[Player_ID]          integer  NOT NULL 
+)
+go
+
+ALTER TABLE [Logon]
+	ADD CONSTRAINT [XPKLogon] PRIMARY KEY  CLUSTERED ([Logon_ID] ASC)
+go
+
+CREATE TABLE [Players]
+( 
+	[Player_ID]          integer  NOT NULL ,
+	[Captain_ID]         integer  NULL ,
+	[First_Name]         varchar(50)  NULL ,
+	[Last_Name]          varchar(50)  NULL ,
+	[Street_Address]     varchar(100)  NULL ,
+	[City_Name]          varchar(50)  NULL ,
+	[State_Code]         char(2)  NULL ,
+	[Zip_Code]           integer  NULL ,
+	[Email_Address]      varchar(50)  NULL ,
+	[Phone_Number]       varchar(50)  NULL ,
+	[team__id]           integer  NOT NULL ,
+	[Tshirt_Size]        char(4)  NULL ,
+	[Birth_Date]         date  NULL ,
+	[Gender_Code]        char  NULL ,
+	[Vertical_Stack_IND] bit  NULL ,
+	[Horizontal_Stack_IND] bit  NULL ,
+	[Zone_Ind]           bit  NULL 
+)
+go
+
+ALTER TABLE [Players]
+	ADD CONSTRAINT [XPKPlayers] PRIMARY KEY  CLUSTERED ([Player_ID] ASC)
+go
+
+CREATE TABLE [Positions]
+( 
+	[Position_ID]        integer  NOT NULL ,
+	[Experience_Name]    varchar(20)  NULL ,
+	[Position_Name]      varchar(20)  NULL ,
+	[Player_ID]          integer  NOT NULL 
+)
+go
+
+ALTER TABLE [Positions]
+	ADD CONSTRAINT [XPKPositions] PRIMARY KEY  CLUSTERED ([Position_ID] ASC)
+go
+
+CREATE TABLE [Seasons]
+( 
+	[Seasons_ID]         integer  NOT NULL ,
+	[Team_Mate_Preferences] varchar(20)  NULL ,
+	[Availability_Date]  date  NULL 
+)
+go
+
+ALTER TABLE [Seasons]
+	ADD CONSTRAINT [XPKSeasons] PRIMARY KEY  CLUSTERED ([Seasons_ID] ASC)
+go
+
+CREATE TABLE [Stats]
+( 
+	[Stat_ID]            integer  NOT NULL ,
+	[Win_Number]         integer  NULL ,
+	[Loss_Number]        integer  NULL ,
+	[Passing_Yard_number] integer  NULL ,
+	[Passing_Completion_Number] integer  NULL ,
+	[Player_ID]          integer  NOT NULL 
+)
+go
+
+ALTER TABLE [Stats]
+	ADD CONSTRAINT [XPKStats] PRIMARY KEY  CLUSTERED ([Stat_ID] ASC)
+go
+
+CREATE TABLE [Teams]
+( 
+	[team__id]           integer  NOT NULL ,
+	[team_name]          varchar(20)  NULL ,
+	[team_color]         varchar(20)  NULL ,
+	[team_rank]          integer  NULL ,
+	[league_name]        varchar(20)  NULL 
+)
+go
+
+ALTER TABLE [Teams]
+	ADD CONSTRAINT [XPKTeams] PRIMARY KEY  CLUSTERED ([team__id] ASC)
+go
+
+CREATE TABLE [Teams_Seasons]
+( 
+	[team__id]           integer  NOT NULL ,
+	[Seasons_ID]         integer  NOT NULL 
+)
+go
+
+ALTER TABLE [Teams_Seasons]
+	ADD CONSTRAINT [XPKTeams_Seasons] PRIMARY KEY  CLUSTERED ([team__id] ASC,[Seasons_ID] ASC)
+go
+
+CREATE TABLE [Teams_Stats]
+( 
+	[team__id]           integer  NOT NULL ,
+	[Stat_ID]            integer  NOT NULL 
+)
+go
+
+ALTER TABLE [Teams_Stats]
+	ADD CONSTRAINT [XPKTeams_Stats] PRIMARY KEY  CLUSTERED ([team__id] ASC,[Stat_ID] ASC)
+go
+
+
+ALTER TABLE [Dues]
+	ADD CONSTRAINT [R_3] FOREIGN KEY ([Player_ID]) REFERENCES [Players]([Player_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Logon]
+	ADD CONSTRAINT [R_1] FOREIGN KEY ([Player_ID]) REFERENCES [Players]([Player_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Players]
+	ADD CONSTRAINT [R_19] FOREIGN KEY ([team__id]) REFERENCES [Teams]([team__id])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Players]
+	ADD CONSTRAINT [R_21] FOREIGN KEY ([Captain_ID]) REFERENCES [Players]([Player_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Positions]
+	ADD CONSTRAINT [R_20] FOREIGN KEY ([Player_ID]) REFERENCES [Players]([Player_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Stats]
+	ADD CONSTRAINT [R_18] FOREIGN KEY ([Player_ID]) REFERENCES [Players]([Player_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Teams_Seasons]
+	ADD CONSTRAINT [R_9] FOREIGN KEY ([team__id]) REFERENCES [Teams]([team__id])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Teams_Seasons]
+	ADD CONSTRAINT [R_10] FOREIGN KEY ([Seasons_ID]) REFERENCES [Seasons]([Seasons_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Teams_Stats]
+	ADD CONSTRAINT [R_16] FOREIGN KEY ([team__id]) REFERENCES [Teams]([team__id])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Teams_Stats]
+	ADD CONSTRAINT [R_17] FOREIGN KEY ([Stat_ID]) REFERENCES [Stats]([Stat_ID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
